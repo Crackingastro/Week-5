@@ -11,6 +11,8 @@ from pathlib import Path
 Data_DIR = Path(__file__).parent.parent / "Data"
 
 # Define the feature engineering function
+
+
 def create_features(df):
     """Function to create features from raw data"""
     df = df.copy()
@@ -22,17 +24,22 @@ def create_features(df):
     df['TransactionYear'] = df['TransactionStartTime'].dt.year
     # drop ID and timestamp columns
     return df.drop(
-        ['TransactionId','BatchId','AccountId','SubscriptionId',
-         'CustomerId','TransactionStartTime'],
+        ['TransactionId', 'BatchId', 'AccountId', 'SubscriptionId',
+         'CustomerId', 'TransactionStartTime'],
         axis=1
     )
 
+
 # updated column lists without aggregates
-NUMERIC = ['CountryCode','Amount','Value','PricingStrategy']
-DATETIME = ['TransactionHour','TransactionDay','TransactionMonth','TransactionYear']
+NUMERIC = ['CountryCode', 'Amount', 'Value', 'PricingStrategy']
+DATETIME = [
+    'TransactionHour',
+    'TransactionDay',
+    'TransactionMonth',
+    'TransactionYear']
 CATEGORICAL = [
-    'CurrencyCode','ProviderId',
-    'ProductId','ProductCategory','ChannelId'
+    'CurrencyCode', 'ProviderId',
+    'ProductId', 'ProductCategory', 'ChannelId'
 ]
 
 # Create pipeline using FunctionTransformer instead of FeatureBuilder class
@@ -48,13 +55,15 @@ pipeline = Pipeline([
         ]), DATETIME),
         ('cat', Pipeline([
             ('imputer', SimpleImputer(strategy='most_frequent')),
-            ('encoder', OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1))
+            ('encoder', OrdinalEncoder(
+                handle_unknown='use_encoded_value', unknown_value=-1))
         ]), CATEGORICAL),
     ], remainder='drop'))
 ])
 
 # Load and process data
-df = pd.read_csv(Data_DIR /'raw/data.csv', parse_dates=['TransactionStartTime'])
+df = pd.read_csv(Data_DIR / 'raw/data.csv',
+                 parse_dates=['TransactionStartTime'])
 y = df['FraudResult']
 X = df.drop(columns='FraudResult')
 
@@ -68,6 +77,6 @@ Xp = pipeline.transform(X)
 dfp = pd.DataFrame(Xp, columns=NUMERIC + DATETIME + CATEGORICAL)
 dfp['FraudResult'] = y.values
 dfp[DATETIME] = dfp[DATETIME].astype('int16')
-dfp.to_csv(Data_DIR /'processed/data.csv', index=False)
+dfp.to_csv(Data_DIR / 'processed/data.csv', index=False)
 
 print("processed CSV saved to ../Data/processed/data.csv")

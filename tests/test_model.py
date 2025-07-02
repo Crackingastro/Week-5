@@ -1,25 +1,28 @@
+from src.pipline import create_features
 import pytest
 import joblib
 import pandas as pd
 from pathlib import Path
-import xgboost 
+import xgboost
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
-from src.pipline import create_features
 
-MODEL_DIR = Path(__file__).parent.parent / "src"/"model"
+MODEL_DIR = Path(__file__).parent.parent / "src" / "model"
 
 
 @pytest.fixture(scope="module")
 def pipeline():
     return joblib.load(MODEL_DIR / "pipeline.pkl")
 
+
 @pytest.fixture(scope="module")
 def model():
     return joblib.load(MODEL_DIR / "model.pkl")
 
+
 def test_model_loading(model):
     assert hasattr(model, "predict") and callable(model.predict)
+
 
 def test_prediction_shape(pipeline, model):
     """
@@ -67,4 +70,6 @@ def test_prediction_shape(pipeline, model):
     df = pd.DataFrame(raw)
     X = pipeline.transform(df)
     preds = model.predict(X)
-    assert preds.shape[0] == df.shape[0], f"Expected {df.shape[0]} preds, got {preds.shape[0]}"
+    assert preds.shape[0] == df.shape[0], f"Expected {
+        df.shape[0]} preds, got {
+        preds.shape[0]}"
