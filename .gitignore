@@ -1,3 +1,4 @@
 Data/
 .venv/
 notbooks/mlruns/
+tests/__pycache__
