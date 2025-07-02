@@ -59,6 +59,8 @@ y = df['FraudResult']
 X = df.drop(columns='FraudResult')
 
 pipeline.fit(X)
+# Uncomment if you want to save the model
+
 # joblib.dump(pipeline, 'pipeline.pkl')
 # print("pipeline saved to pipeline.pkl")
 
