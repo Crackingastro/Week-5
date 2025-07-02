@@ -4,25 +4,28 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer, KNNImputer
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder
+from sklearn.preprocessing import FunctionTransformer
 import joblib
+from pathlib import Path
 
-class FeatureBuilder(BaseEstimator, TransformerMixin):
-    def fit(self, X, y=None):
-        return self
-    def transform(self, X):
-        df = X.copy()
-        # extract datetime features
-        df['TransactionStartTime'] = pd.to_datetime(df['TransactionStartTime'])
-        df['TransactionHour'] = df['TransactionStartTime'].dt.hour
-        df['TransactionDay'] = df['TransactionStartTime'].dt.day
-        df['TransactionMonth'] = df['TransactionStartTime'].dt.month
-        df['TransactionYear'] = df['TransactionStartTime'].dt.year
-        # drop ID and timestamp columns
-        return df.drop(
-            ['TransactionId','BatchId','AccountId','SubscriptionId',
-             'CustomerId','TransactionStartTime'],
-            axis=1
-        )
+Data_DIR = Path(__file__).parent.parent / "Data"
+
+# Define the feature engineering function
+def create_features(df):
+    """Function to create features from raw data"""
+    df = df.copy()
+    # extract datetime features
+    df['TransactionStartTime'] = pd.to_datetime(df['TransactionStartTime'])
+    df['TransactionHour'] = df['TransactionStartTime'].dt.hour
+    df['TransactionDay'] = df['TransactionStartTime'].dt.day
+    df['TransactionMonth'] = df['TransactionStartTime'].dt.month
+    df['TransactionYear'] = df['TransactionStartTime'].dt.year
+    # drop ID and timestamp columns
+    return df.drop(
+        ['TransactionId','BatchId','AccountId','SubscriptionId',
+         'CustomerId','TransactionStartTime'],
+        axis=1
+    )
 
 # updated column lists without aggregates
 NUMERIC = ['CountryCode','Amount','Value','PricingStrategy']
@@ -32,8 +35,9 @@ CATEGORICAL = [
     'ProductId','ProductCategory','ChannelId'
 ]
 
+# Create pipeline using FunctionTransformer instead of FeatureBuilder class
 pipeline = Pipeline([
-    ('features', FeatureBuilder()),
+    ('features', FunctionTransformer(create_features)),
     ('preprocessor', ColumnTransformer([
         ('num', Pipeline([
             ('imputer', KNNImputer(n_neighbors=3)),
@@ -49,8 +53,8 @@ pipeline = Pipeline([
     ], remainder='drop'))
 ])
 
-
-df = pd.read_csv('../Data/raw/data.csv', parse_dates=['TransactionStartTime'])
+# Load and process data
+df = pd.read_csv(Data_DIR /'raw/data.csv', parse_dates=['TransactionStartTime'])
 y = df['FraudResult']
 X = df.drop(columns='FraudResult')
 
@@ -62,6 +66,6 @@ Xp = pipeline.transform(X)
 dfp = pd.DataFrame(Xp, columns=NUMERIC + DATETIME + CATEGORICAL)
 dfp['FraudResult'] = y.values
 dfp[DATETIME] = dfp[DATETIME].astype('int16')
-dfp.to_csv('../Data/processed/data.csv', index=False)
+dfp.to_csv(Data_DIR /'processed/data2.csv', index=False)
 
 print("processed CSV saved to ../Data/processed/data.csv")
