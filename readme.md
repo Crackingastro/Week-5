@@ -1,23 +1,126 @@
-# Credit Risk Scoring Project
+Here’s a fresh, emoji-packed `README.md` you can drop into your repo root:
 
-This repository will contain my work on developing a credit-risk scoring model in alignment with the Basel II framework. Below, I will present the business-understanding section that will motivate my modeling choices and regulatory considerations.
+````markdown
+# 🚀 Credit Risk Scoring – Week 5 Project
 
-## Credit Scoring Business Understanding
+> A full end-to-end credit-risk scoring pipeline & REST API built with scikit-learn, MLflow, and FastAPI.
 
-### 1. Basel II’s emphasis on risk measurement and the need for interpretability  
-Basel II will require banks to quantify credit-risk exposures (Probability of Default, Loss Given Default, Exposure at Default) and hold capital accordingly. Under the Internal Ratings-Based (IRB) approaches, regulators will need to review, validate, and challenge model outputs—so every assumption, parameter choice, and transformation will have to be clear. This will drive me to choose models that are inherently interpretable (or can be decomposed into human-readable pieces), accompanied by full documentation of data sources, feature-engineering logic (e.g. WoE binning), and performance diagnostics.
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.9%2B-blue.svg" alt="Python" />
+  <img src="https://img.shields.io/badge/fastapi-%5E0.115.14-green.svg" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/mlflow-%5E3.1.1-orange.svg" alt="MLflow" />
+  <img src="https://img.shields.io/badge/tests-pytest-red.svg" alt="pytest" />
+</p>
 
-### 2. Necessity and risks of proxy default labels  
-Because “actual default” events will occur infrequently and will not be directly observed in most historical data, I will have to construct a proxy target—commonly arrears beyond 90 days, charge-off status, or bankruptcy filings. While this will enable me to train a classifier, it will introduce **model risk**: if the proxy behavior diverges from true default (e.g. successful restructurings or write-offs), my predictions could misestimate risk, leading to under- or over-capitalization, poor credit decisions, and potential regulatory censure.
+## ✨ Features
 
-### 3. Trade-offs: simple interpretable vs. complex high-performance models  
-- **Logistic Regression + WoE**  
-  + Will be fully transparent: each coefficient will correspond to a well-understood predictor’s weight of evidence.  
-  + Will be easier to validate and document; will deploy faster in production and explain to auditors.  
-  – May underperform if relationships become highly non-linear or involve complex feature interactions.  
-- **Gradient Boosting Machines (GBMs)**  
-  + Will often deliver higher predictive accuracy by capturing non-linearities and feature interactions automatically.  
-  – Will behave as a “black box,” complicating explanation; will require surrogate modeling (e.g. SHAP) and additional validation steps.  
-  – Will involve longer development and review cycles under strict governance—potentially slowing time-to-market.
+- ✂️ **Data Preprocessing**  
+  – Feature engineering (timestamp breakdown)  
+  – Imputation, scaling & encoding  
+- 🧠 **Model Training & Tracking** via MLflow  
+- 🚀 **Live Prediction API** with FastAPI  
+- 🧪 **Automated Tests** (pipeline & model)  
+- 📓 **Jupyter Notebooks** for EDA & prototyping  
 
-In a regulated context, I will balance regulatory acceptability and operational efficiency (favoring simpler models) against the potential uplift in risk differentiation and profitability (favoring complex models).
+## 📦 Quick Start
+
+1. **Clone**  
+   ```bash
+   git clone https://github.com/Crackingastro/Week-5.git
+   cd Week-5
+````
+
+2. **Create & activate venv**
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate   # on Windows use `venv\Scripts\activate`
+   ```
+3. **Install deps**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. **Fetch data** (DVC)
+
+   ```bash
+   dvc pull
+   ```
+5. **Run the API**
+
+   ```bash
+   uvicorn src.api.main:app --reload
+   ```
+6. **Hit the endpoint**
+
+   ```bash
+   curl -X POST http://127.0.0.1:8000/predict \
+     -H "Content-Type: application/json" \
+     -d '{ "TransactionId":"…", "BatchId":"…", …, "FraudResult":0 }'
+   # → { "prediction": 0 }
+   ```
+
+## 🛠️ Project Structure
+
+```
+📦 Week-5
+├── Data/                # raw & processed data (DVC-tracked)
+├── notbooks/            # Jupyter notebooks (EDA, model training)
+├── src/
+│   ├── api/             # FastAPI app & Pydantic schemas
+│   └── model/           # Pipeline & model pickles (+ builder script)
+├── tests/               # pytest suite for pipeline & model
+├── requirements.txt     # Python dependencies
+└── readme.md            # ← you are here!
+```
+
+## 🛠️ Usage
+
+### 1. Build & save preprocessing pipeline
+
+```bash
+python src/model/pipeline.py
+```
+
+### 2. (Re)train model
+
+> 📓 Check `notbooks/` for the MLflow-powered training notebooks.
+
+### 3. Start the API
+
+```bash
+uvicorn src.api.main:app --reload
+```
+
+### 4. Make predictions
+
+* **Endpoint:** `POST /predict`
+* **Payload:** JSON with all 16 transaction fields
+* **Response:** `{ "prediction": 0 | 1 }`
+
+## 🧪 Testing
+
+Run the full test suite:
+
+```bash
+pytest -v
+```
+
+* **test\_pipeline.py**: validates feature names & input checks
+* **test\_model.py**: checks model loading & output shape
+
+## 🤝 Contributing
+
+1. ⭐ Star the repo
+2. 🍴 Fork it
+3. 📥 Create a feature branch
+4. 🔀 Submit a pull request
+
+---
+
+Made with ❤️ by **Crackingastro**
+
+```
+
+Feel free to tweak any section or emoji to suit your style—enjoy!
+```
