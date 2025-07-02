@@ -1,5 +1,3 @@
-Here’s a fresh, emoji-packed `README.md` you can drop into your repo root:
-
 # 🚀 Credit Risk Scoring – Week 5 Project
 
 > A full end-to-end credit-risk scoring pipeline & REST API built with scikit-learn, MLflow, and FastAPI.
