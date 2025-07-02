@@ -66,6 +66,6 @@ Xp = pipeline.transform(X)
 dfp = pd.DataFrame(Xp, columns=NUMERIC + DATETIME + CATEGORICAL)
 dfp['FraudResult'] = y.values
 dfp[DATETIME] = dfp[DATETIME].astype('int16')
-dfp.to_csv(Data_DIR /'processed/data2.csv', index=False)
+dfp.to_csv(Data_DIR /'processed/data.csv', index=False)
 
 print("processed CSV saved to ../Data/processed/data.csv")
