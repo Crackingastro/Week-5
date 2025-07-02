@@ -1,6 +1,5 @@
 Here’s a fresh, emoji-packed `README.md` you can drop into your repo root:
 
-````markdown
 # 🚀 Credit Risk Scoring – Week 5 Project
 
 > A full end-to-end credit-risk scoring pipeline & REST API built with scikit-learn, MLflow, and FastAPI.
@@ -28,7 +27,7 @@ Here’s a fresh, emoji-packed `README.md` you can drop into your repo root:
    ```bash
    git clone https://github.com/Crackingastro/Week-5.git
    cd Week-5
-````
+
 
 2. **Create & activate venv**
 
