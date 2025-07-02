@@ -1,12 +1,12 @@
 # 1. Base image
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # 2. Set a working directory
 WORKDIR /app
 
 # 3. Install OS deps (if any) and Python deps
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip \
+RUN pip install --upgrade pip \
  && pip install --no-cache-dir -r requirements.txt
 
 # 4. Copy in your source code
