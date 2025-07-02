@@ -59,8 +59,8 @@ y = df['FraudResult']
 X = df.drop(columns='FraudResult')
 
 pipeline.fit(X)
-joblib.dump(pipeline, 'pipeline.pkl')
-print("pipeline saved to pipeline.pkl")
+# joblib.dump(pipeline, 'pipeline.pkl')
+# print("pipeline saved to pipeline.pkl")
 
 Xp = pipeline.transform(X)
 dfp = pd.DataFrame(Xp, columns=NUMERIC + DATETIME + CATEGORICAL)
